@@ -72,7 +72,6 @@
 // 第1問  id='q1'の要素の文字色を赤色にせよ。
 $(function() {
   $('#q1').css('color', 'red');
-})
 // 第2問  id='q2'の要素をクリックしたら背景色をピンクにせよ。
   $('#q2').click(function() {
     $(this).css('background-color', 'pink');
@@ -122,6 +121,7 @@ $(function() {
     var num = $(this).index();
     $('#q11').find('li').eq(num).addClass('large');
   });
+});
 </script>
 </body>
 </html>
