@@ -102,7 +102,8 @@
           }).done(function(data) {
             if(data.count === 0) {
               notFound();
-            }else {
+              $('.lists').empty();
+            } else {
               lastPage = data.pageCount;
               result(data.Items);
               pager(data);
@@ -115,32 +116,46 @@
         }
 
         function notFound() {
-          $('.message').remove();
-          $('.lists').before('<div class="message">検索結果がありませんでした。<br>別のキーワードで検索してください。</div>');
+          clear();
+          var message = '<div class="message">検索結果がありませんでした。<br>別のキーワードで検索してください。</div>';
+          display(message);
         }
-
+        
         function noMorePage() {
-          $('.message').remove();
-	        $('.lists').before('<div class="message">これ以上はありません</div>');
+          clear();
+          var message = '<div class="message">これ以上はありません</div>';
+          display(message);
         }
 
         function errorMessage(error) {
-          $('.message').remove();
-          $('.lists').empty();
+          clear();
+          var errorMessage = "";
           if (error.status === 0) {
-            $('.lists').before('<div class="message">通信に失敗しました。インターネットの接続をご確認ください</div>');
+            errorMessage = '<div class="message">通信に失敗しました。インターネットの接続をご確認ください</div>';
           } else if (error.status === 400) {
-            $('.lists').before('<div class="message">検索文字が空、もしくは半角英数1文字になっています</div>');
-          }else if (error.status === 429){
-            $('.lists').before('<div class="message">一定期間内に連続するアクセスが発生しました</div>');
+            errorMessage = '<div class="message">検索文字が空、もしくは半角英数1文字になっています</div>';
+          } else if (error.status === 429){
+            errorMessage = '<div class="message">一定期間内に連続するアクセスが発生しました</div>';
           } else {
-            $('.lists').before('<div class="message">予期せぬエラーが発生しました。</div>');
+            errorMessage = '<div class="message">予期せぬエラーが発生しました。</div>';
           }
+          display(errorMessage);
+        }
+
+        //$('.lists').before();をまとめた部分。
+        function display(message) {
+          $('.lists').before(message);
+        }
+
+        //削除機能
+        function clear() {
+          $('.lists').empty();
+          $('.message').remove();
         }
 
         //検索結果
         function result(data) {
-          $('.message').remove();
+          clear();
           var searchList = '';
           //テンプレートリテラルという書き方だとうまく表示されなかったため、+で文字列結合
           $.each(data, function(i, item) {
@@ -161,7 +176,7 @@
         //ページャー
         function pager(data) {
           $('.js-pager').remove();
-          var pager='<div class="js-pager">' + 
+          var pager = '<div class="js-pager">' + 
                       '<ul class="btn-wrapper">' + 
                         '<li class="prev btn-item"><a class="btn-anchor" href="#">前へ</a></li>' +
                         '<li class="next btn-item"><a class="btn-anchor" href="#">次へ</a></li>' + 
